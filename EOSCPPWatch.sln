@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27703.2026
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EOSCPPWatch", "EOSCPPWatch\EOSCPPWatch.csproj", "{1E2FE3A9-7492-4890-8B0F-C156D87B305F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1E2FE3A9-7492-4890-8B0F-C156D87B305F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1E2FE3A9-7492-4890-8B0F-C156D87B305F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1E2FE3A9-7492-4890-8B0F-C156D87B305F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1E2FE3A9-7492-4890-8B0F-C156D87B305F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {15CB53E6-7A80-4E99-B8EA-D592FA391398}
+	EndGlobalSection
+EndGlobal
