@@ -5,7 +5,7 @@ Allows EOS developers to get started writing smart contracts in minutes, not hou
 
 EOS Smart Contracts are written in C++, and configuring a development environment to compile those smart contracts can be time consuming and much of the tooling simply is not available for windows developers. 
 
-EOS Easy contract allows you to create a smart contract without having to compule any software and does not require knowlege of the complex ecosystem that EOS uses to build it's contracts. 
+EOS Easy contract allows you to create a smart contract without having to compile any software and does not require knowlege of the complex ecosystem that EOS uses to build it's contracts. 
 
 How is this achieved? All of the tooling needed is packaged into a Docker container, when it comes time to compile your code, EOS Easy Contract runs all the needed commands inside the docker container and gives you back the result (.wasm file) which can then be uploaded to the EOS network. 
 
