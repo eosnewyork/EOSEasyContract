@@ -26,7 +26,7 @@ Requirements
 Getting Started
 ------------
 
-1. Download and decompress the software (In this example we'll dempress the .zip file to a folder c:\tools\EOSEasyContract)
+1. Download ( https://github.com/eosnewyork/EOSEasyContract/releases ) and decompress the software (In this example we'll dempress the .zip file to a folder c:\tools\EOSEasyContract)
 
 2. Initialize you environment
 
