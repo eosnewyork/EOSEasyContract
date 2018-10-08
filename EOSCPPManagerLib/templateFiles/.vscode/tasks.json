@@ -1,0 +1,33 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "isBackground": true,
+            "label": "Compile EOSIO smart contract",
+            "type": "shell",
+          "windows": {
+            "command": "EOSEasyContract.exe build --path \"${workspaceFolder}\" --watch"
+          },
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            },
+            "problemMatcher": {
+                "base": "$gcc",
+                "owner": "cpp",
+                "fileLocation": ["relative","${workspaceFolder}"],
+                "background": {
+                    "activeOnStart": true,
+                    "beginsPattern": "^Begin EOSIO contract build$",
+                    "endsPattern": "^End EOSIO contract build$"
+                }
+            }
+        }
+    ]
+}

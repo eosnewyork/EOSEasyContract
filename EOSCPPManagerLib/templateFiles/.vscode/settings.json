@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "memory": "cpp",
+        "vector": "cpp",
+        "limits": "cpp"
+    }
+}

@@ -7,18 +7,21 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace EOSCPPWatch
+namespace EOSCPPManagerLib
 {
     public static class DockerHelper
     {
         static Logger logger = NLog.LogManager.GetCurrentClassLogger();
         static Uri dockerServer = new Uri("tcp://localhost:2375");
         static DockerClient client = new DockerClientConfiguration(dockerServer).CreateClient();
-        static WatchArgs args = null;
+        //static string dockerBuildContainerPrefix = "/EOSCDT";
+        //static string dockerBuildContainerName = string.Empty;
+        static string sourceCodePath = string.Empty;
 
-        public static void init(WatchArgs watchArgs)
+
+        public static void init(String path, String dockerImage, bool watch)
         {
-            args = watchArgs;
+            sourceCodePath = path;
         }
 
 
@@ -30,7 +33,7 @@ namespace EOSCPPWatch
             {
                 foreach (var containerName in container.Names)
                 {
-                    logger.Debug("container found: {0}", containerName);
+                    logger.Info("container found: {0} in {1} state", containerName, container.State );
                     if (containerName.ToUpper() == containerNameToCheck)
                     {
                         exists = true;
@@ -74,7 +77,7 @@ namespace EOSCPPWatch
                             {
                                 new Mount
                                 {
-                                    Source = args.Path,
+                                    Source = sourceCodePath,
                                     Target = "/data",
                                     Type = "bind"
                                 },
@@ -89,7 +92,6 @@ namespace EOSCPPWatch
                 HostConfig h = new HostConfig();
                 h.Mounts = m;
 
-                string ID = "";
                 if (!exists)
                 {
                     logger.Info("Creating container {0} from image {1}", containerName, dockerImageName);
@@ -124,13 +126,13 @@ namespace EOSCPPWatch
 
         public static async Task<bool> RunCommandAsync(string command)
         {
-            const string id = "EOSCDT";
+            //const string id = "EOSCDT";
 
             try
             {
                 var echo = Encoding.UTF8.GetBytes("ls -al");
                 //var ping = Encoding.UTF8.GetBytes("/bin/ping -c 3 127.0.0.1");
-                var cmdToExecuteCP = Encoding.UTF8.GetBytes("cp -R /data /eosio.contracts/ \n");
+                //var cmdToExecuteCP = Encoding.UTF8.GetBytes("cp -R /data /eosio.contracts/ \n");
                 var cmdToExecute = Encoding.UTF8.GetBytes(command + "\n");
 
                 var config = new ContainerExecCreateParameters
@@ -145,7 +147,9 @@ namespace EOSCPPWatch
                     Privileged = true
                 };
 
-                var execId = await client.Containers.ExecCreateContainerAsync(id, config);
+                var execId = await client.Containers.ExecCreateContainerAsync(Util.getContainerName(sourceCodePath), config);
+
+                logger.Info("ExecCreateContainerAsync {0}", execId.ID);
 
                 var configStart = new ContainerExecStartParameters
                 {
@@ -162,7 +166,7 @@ namespace EOSCPPWatch
                 var buffer = new byte[1024];
                 using (var stream = await client.Containers.StartWithConfigContainerExecAsync(execId.ID, configStart, default(CancellationToken)))
                 {
-                    await stream.WriteAsync(cmdToExecuteCP, 0, cmdToExecuteCP.Length, default(CancellationToken));
+                    //await stream.WriteAsync(cmdToExecuteCP, 0, cmdToExecuteCP.Length, default(CancellationToken));
                     await stream.WriteAsync(cmdToExecute, 0, cmdToExecute.Length, default(CancellationToken));
 
                     stream.CloseWrite();
@@ -185,7 +189,9 @@ namespace EOSCPPWatch
             }
             catch (Exception ex)
             {
-                logger.Error(ex.Message);
+                logger.Error("x"  + ex.Message);
+                logger.Error("x" + ex.InnerException);
+                logger.Error(ex.StackTrace);
             }
 
             return true;

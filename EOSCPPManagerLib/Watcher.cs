@@ -3,22 +3,29 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Text;
 
-
-namespace EOSCPPWatch
+namespace EOSCPPManagerLib
 {
-    static class Watcher
+
+
+    public static class Watcher
     {
         static Logger logger = NLog.LogManager.GetCurrentClassLogger();
         static Queue<string> buildQueue = new Queue<string>();
         static bool building = false;
-        static WatchArgs args = null;
-        static string dockerBuildContainerName = "/EOSCDT";
+        static String sourceCodePath = null;
+        static String dockerImage = null;
+        //static string dockerBuildContainerPrefix = "/EOSCDT";
+        //static string dockerBuildContainerName = string.Empty;
 
-        public static void start(WatchArgs watchArgs)
+        public static void start(string path, string dockerImg)
         {
-            args = watchArgs;
-            FileSystemWatcher watcher_cpp = new FileSystemWatcher(args.Path);
+            sourceCodePath = path;
+            dockerImage = dockerImg;
+
+
+            FileSystemWatcher watcher_cpp = new FileSystemWatcher(sourceCodePath);
             //watcher.NotifyFilter = NotifyFilters.LastWrite;
             watcher_cpp.IncludeSubdirectories = true;
             //watcher_cpp.Filter = "*.cpp";
@@ -43,9 +50,9 @@ namespace EOSCPPWatch
             addToQueue(e.FullPath);
         }
 
-        private static void addToQueue(string fullPath)
+        public static void addToQueue(string fullPath)
         {
-            var buildPath = Path.Combine(args.Path, "build");
+            var buildPath = Path.Combine(sourceCodePath, "build");
             if (!fullPath.StartsWith(buildPath))
             {
                 FileInfo info = new FileInfo(fullPath);
@@ -74,6 +81,8 @@ namespace EOSCPPWatch
 
         private static void build()
         {
+
+
             //If we're already building then exit
             if (building)
                 return;
@@ -91,10 +100,11 @@ namespace EOSCPPWatch
 
                                 var eosiocppDockerImage = config["eosiocppDockerImage"];
                 */
-                var containerExists = DockerHelper.CheckContainerExistsAsync(dockerBuildContainerName).Result;
+                logger.Info("Checking to see if {0} is running", Util.getContainerName(sourceCodePath));
+                var containerExists = DockerHelper.CheckContainerExistsAsync(Util.getContainerName(sourceCodePath)).Result;
                 if (!containerExists)
                 {
-                    var n = DockerHelper.StartDockerAsync(args.DockerImage, dockerBuildContainerName, false).Result;
+                    var n = DockerHelper.StartDockerAsync(dockerImage, Util.getContainerName(sourceCodePath), false).Result;
                 }
 
                 //string cmd = "eosiocpp";
