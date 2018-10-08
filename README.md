@@ -1,13 +1,13 @@
 EOS Easy Contract
 ============
 
-Allows EOS developers to get started writing smart contracts in minutes, not hours. 
+EOS Easy Contract allows EOS developers to get started writing smart contracts in minutes, not hours! 
 
-EOS Smart Contracts are written in C++, and configuring a development environment to compile those smart contracts can be time consuming and much of the tooling simply is not available for windows developers. 
+EOS Easy Contract allows you to create a smart contract without having to compile any software and does not require knowledge of the complex EOS ecosystem used to build it's contracts. 
 
-EOS Easy contract allows you to create a smart contract without having to compile any software and does not require knowlege of the complex ecosystem that EOS uses to build it's contracts. 
+EOS Smart Contracts are written in C++, and configuring a development environment to compile those smart contracts can be time consuming and much of the tooling is not yet available for Windows developers. 
 
-How is this achieved? All of the tooling needed is packaged into a Docker container, when it comes time to compile your code, EOS Easy Contract runs all the needed commands inside the docker container and gives you back the result (.wasm file) which can then be uploaded to the EOS network. 
+How does EOS Easy Contract pull this altogether? First, all of the tooling needed is packaged into a Docker container. When it comes time to compile your code, EOS Easy Contract runs all the needed commands inside the docker container and gives you back the result (.wasm file) which can then be uploaded to the EOS network. 
 
 EOS Easy Contract provides tooling to quickly:
 1. Create a starting Visual Studio Code template. 
@@ -26,7 +26,7 @@ Requirements
 Getting Started
 ------------
 
-1. Download ( https://github.com/eosnewyork/EOSEasyContract/releases ) and decompress the software (In this example we'll dempress the .zip file to a folder c:\tools\EOSEasyContract)
+1. Download ( https://github.com/eosnewyork/EOSEasyContract/releases ) and decompress the software (in this example we'll decompress the .zip file to a folder c:\tools\EOSEasyContract)
 
 2. Initialize you environment
 
