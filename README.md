@@ -3,7 +3,7 @@ EOS Easy Contract
 
 EOS Easy Contract allows EOS developers to get started writing smart contracts in minutes, not hours! 
 
-EOS Easy Contract allows you to create a smart contract without having to compile any software and does not require knowledge of the complex EOS ecosystem used to build it's contracts. 
+EOS Easy Contract allows you to create a smart contract without having to compile any software and does not require knowledge of the complex EOS ecosystem used to build its contracts. 
 
 EOS Smart Contracts are written in C++, and configuring a development environment to compile those smart contracts can be time consuming and much of the tooling is not yet available for Windows developers. 
 
