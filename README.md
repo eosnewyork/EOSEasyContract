@@ -42,7 +42,7 @@ Getting Started
 > EOSEasyContract.exe template new --path c:\temp --name EOSTemplate1
 ````
 
-4. Generate a project from template
+4. Open the project in Visual Studio Code, using the below instruction or simply launch the GUI and open the folder
 
 ```
 > cd c:\temp\EOSTemplate1
