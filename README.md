@@ -38,6 +38,10 @@ Getting Started
 
 2. Test docker and download missing images
 
+Before executing the following commands, ensure that you this following setting is set correctly in your docker settings. 
+
+
+![Docker Settings](DockerSettings.png)
 ```
 > cd c:\tools\EOSEasyContract
 > EOSEasyContract.exe init docker
