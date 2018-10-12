@@ -4,7 +4,7 @@ using System.Text;
 
 namespace EOSCPPManagerLib
 {
-    static class Util
+    public static class Util
     {
         public static string CreateMD5(string input)
         {
@@ -27,7 +27,7 @@ namespace EOSCPPManagerLib
         public static string getContainerName(string sourceCodePath)
         {
             string pathMD5 = Util.CreateMD5(sourceCodePath);
-            return "/EOSCDT" + "-" + pathMD5;
+            return "EOSCDT" + "-" + pathMD5;
         }
     }
 }

@@ -23,6 +23,38 @@ namespace EOSEasyContract
             app.ThrowOnUnexpectedArgument = false;
             app.HelpOption(inherited: true);
 
+            app.Command("util", configCmd =>
+            {
+                configCmd.OnExecute(() =>
+                {
+                    //Console.WriteLine("Specify a subcommand");
+                    configCmd.ShowHelp();
+                    return 1;
+                });
+
+
+                configCmd.Command("cleanDocker", setCmd =>
+                {
+                    setCmd.Description = "Remove unused Docker containers that have been used to compile";
+
+                    setCmd.OnExecute(() =>
+                    {
+                        logger.Info($"Start cleanup");
+
+                        try
+                        {
+                            var x = DockerHelper.dockerCleanup().Result;
+                        }
+                        catch (Exception ex)
+                        {
+                            logger.Error(ex.Message);
+                        }
+
+                    });
+                });
+
+            });
+
             app.Command("init", configCmd =>
             {
                 configCmd.OnExecute(() =>
@@ -30,6 +62,34 @@ namespace EOSEasyContract
                     //Console.WriteLine("Specify a subcommand");
                     configCmd.ShowHelp();
                     return 1;
+                });
+
+
+                configCmd.Command("docker", setCmd =>
+                {
+                    setCmd.Description = "Check that the required docker images exist on the machine and download any missing";
+
+                    setCmd.OnExecute(() =>
+                    {
+
+                        IConfiguration config = new ConfigurationBuilder()
+                            .AddJsonFile("appsettings.json", true, true)
+                            .Build();
+                        var eosiocppDockerImage = config["eosiocppDockerImage"];
+
+                        logger.Info("Check connection to local docker instance and confirm that image \"{0}\" exists", eosiocppDockerImage);
+
+                        var exists = DockerHelper.CheckImageExistsAsync(eosiocppDockerImage).Result;
+                        if (!exists)
+                        {
+                            var y = DockerHelper.getImageAsync(eosiocppDockerImage).Result;
+                        }
+                        else
+                        {
+                            logger.Info("Connection = good. Image exists. You're good to go.");
+                        }
+                        //logger.Info(list);
+                    });
                 });
 
                 configCmd.Command("windows", setCmd =>
@@ -107,13 +167,14 @@ namespace EOSEasyContract
 
                 var pathOption = configCmd.Option("-p|--path <PATH>", "The path to the parent folder, which will contain the new template (*Required)", CommandOptionType.SingleValue).IsRequired();
                 var dockerImageOption = configCmd.Option("-d|--dockerImage <ImageName>", string.Format("The name of the docker image to use (Default: {0})", eosiocppDockerImage), CommandOptionType.SingleValue);
-                var watchOption = configCmd.Option("-w|--watch", "Continue watching this folder for changes (*Currently Required)", CommandOptionType.NoValue).IsRequired();
+                var watchOption = configCmd.Option("-w|--watch", "Continue watching this folder for changes (*Currently Required)", CommandOptionType.NoValue);
 
 
                 configCmd.OnExecute(() =>
                 {
                     var path = pathOption.Value();
-                    var dockerImage = "binaryfocus/eosio_wasm_1.2.6";
+                    //var dockerImage = "binaryfocus/eosio_wasm_1.2.6";
+                    var dockerImage = eosiocppDockerImage;
                     var watch = false;
                     if (dockerImageOption.Values.Count > 0)
                         dockerImage = dockerImageOption.Value();
@@ -131,7 +192,7 @@ namespace EOSEasyContract
                     Watcher.start(path,dockerImage);
                     //It doesn't matter what file name we push onto the list, as long as it's a cpp or hpp it'll trigger a build.
                     DockerHelper.init(path, dockerImage, watch);
-                    //Watcher.addToQueue("test.cpp");
+                    Watcher.addToQueue("test.cpp");
                     
 
                     if (watch)
@@ -146,8 +207,8 @@ namespace EOSEasyContract
 
                     } else
                     {
-                        logger.Info("We're still experiencing some problems with the one off build command and docker. Please use the --watch option to watch the folder instead.");
-                        //Watcher.checkQueue();
+                        //logger.Info("We're still experiencing some problems with the one off build command and docker. Please use the --watch option to watch the folder instead.");
+                        Watcher.checkQueue();
                     }
 
                     //configCmd.ShowHelp();

@@ -2,7 +2,7 @@
   "profiles": {
     "EOSEasyContract": {
       "commandName": "Project",
-      "commandLineArgs": "build -p C:\\temp\\xxxban10"
+      "commandLineArgs": "init docker"
     }
   }
 }

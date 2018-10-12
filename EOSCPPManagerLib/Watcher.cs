@@ -100,14 +100,18 @@ namespace EOSCPPManagerLib
 
                                 var eosiocppDockerImage = config["eosiocppDockerImage"];
                 */
-                logger.Info("Checking to see if {0} is running", Util.getContainerName(sourceCodePath));
+                logger.Info("Check if container {0} exists", Util.getContainerName(sourceCodePath));
                 var containerExists = DockerHelper.CheckContainerExistsAsync(Util.getContainerName(sourceCodePath)).Result;
                 if (!containerExists)
                 {
+                    logger.Info("No existing container found");
                     var n = DockerHelper.StartDockerAsync(dockerImage, Util.getContainerName(sourceCodePath), false).Result;
+                } else
+                {
+                    logger.Info("Existing container found");
                 }
 
-                //string cmd = "eosiocpp";
+                //string cmd = "ls /";
                 string cmd = "./build.sh";
                 var asyncResult = DockerHelper.RunCommandAsync(cmd).Result;
 

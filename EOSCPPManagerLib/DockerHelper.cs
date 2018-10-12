@@ -16,7 +16,7 @@ namespace EOSCPPManagerLib
         static DockerClient client = new DockerClientConfiguration(dockerServer).CreateClient();
         //static string dockerBuildContainerPrefix = "/EOSCDT";
         //static string dockerBuildContainerName = string.Empty;
-        static string sourceCodePath = string.Empty;
+        public static string sourceCodePath = string.Empty;
 
 
         public static void init(String path, String dockerImage, bool watch)
@@ -25,23 +25,111 @@ namespace EOSCPPManagerLib
         }
 
 
+        public static async Task<bool> dockerCleanup()
+        {
+            var containers = ListContainersAsync().Result;
+
+            foreach (var container in containers)
+            {
+
+                foreach (var containerName in container.Names)
+                {
+                    //logger.Info("NAME {0}", containerName);
+                    if (containerName.ToUpper().Contains("EOSCDT"))
+                    {
+                        logger.Info("Remove container {0}", containerName);
+
+                        ContainerRemoveParameters removeSettings = new ContainerRemoveParameters()
+                        {
+                            Force = true,
+                            RemoveLinks = false,
+                            RemoveVolumes = false
+                        };
+
+                        await client.Containers.StopContainerAsync(container.ID, new ContainerStopParameters { });
+                        await client.Containers.RemoveContainerAsync(container.ID, removeSettings, default(CancellationToken));
+                        logger.Info("done");
+
+                    }
+
+                }
+                
+            }
+
+            return true;
+        }
+
+
+        public static async Task<bool> getImageAsync(string imageName)
+        {
+            bool success = false;
+
+            // create progress 
+            var report = new Progress<JSONMessage>(msg =>
+            {
+                logger.Info( msg.Status);
+            });
+
+            await client.Images.CreateImageAsync(new ImagesCreateParameters
+            {
+                FromImage = imageName
+            },
+            new AuthConfig(),
+            report
+            );
+
+
+            return success;
+        }
+
+        public static async Task<bool> CheckImageExistsAsync(string imageNameToCheck)
+        {
+            bool exists = false;
+
+            logger.Info("Checking if required docker image exists");
+
+            IList<ImagesListResponse> images = null;
+            try
+            {
+                images = await client.Images.ListImagesAsync(
+                new ImagesListParameters()
+                {
+                    MatchName = imageNameToCheck
+                });
+
+                if (images.Count > 0)
+                    exists = true;
+
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex.Message);
+            }
+
+
+            return exists;
+        }
+
         public static async Task<bool> CheckContainerExistsAsync(string containerNameToCheck)
         {
+            containerNameToCheck = "/" + containerNameToCheck;  // Not sure why the container names are prefixed with /, but we'll add it so that we match. 
             bool exists = false;
             var containers = ListContainersAsync().Result;
             foreach (var container in containers)
             {
                 foreach (var containerName in container.Names)
                 {
-                    logger.Info("container found: {0} in {1} state", containerName, container.State );
+                    //logger.Info("Container found: {0} in {1} state", containerName, container.State );
                     if (containerName.ToUpper() == containerNameToCheck)
                     {
+                        //logger.Info("container MATCH: {0} == {1}", containerName.ToUpper(), containerNameToCheck);
                         exists = true;
                     }
 
                 }
                 if (container.State != "running")
                 {
+                    logger.Info("The container is NOT RUNNING, it's in a {0} state. Start it", container.State);
                     var started = StartDockerAsync("", containerNameToCheck, true).Result;
                 }
                 if (exists)
@@ -111,9 +199,9 @@ namespace EOSCPPManagerLib
                     logger.Info("Container {0} already exists", containerName);
                 }
 
-                logger.Info("Starting Container: {0}", containerName);
-
+                logger.Info("AttachContainerAsync: {0}", containerName);
                 var u = client.Containers.AttachContainerAsync(containerName, false, new ContainerAttachParameters() { }, default(CancellationToken)).Result;
+                logger.Info("StartContainerAsync: {0}", containerName);
                 var t = client.Containers.StartContainerAsync(containerName, new ContainerStartParameters() { }).Result;
             }
             catch (Exception ex)

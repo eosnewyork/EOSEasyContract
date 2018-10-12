@@ -8,9 +8,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EOSCPPManagerLib", "EOSCPPManagerLib\EOSCPPManagerLib.csproj", "{236245EB-846D-4D8C-AF1D-52D9BD5EB413}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EOSCPPManagerLib", "EOSCPPManagerLib\EOSCPPManagerLib.csproj", "{236245EB-846D-4D8C-AF1D-52D9BD5EB413}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EOSEasyContract", "EOSEasyContract\EOSEasyContract.csproj", "{AE773410-D15B-46C6-89D0-85F778F32F89}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EOSEasyContract", "EOSEasyContract\EOSEasyContract.csproj", "{AE773410-D15B-46C6-89D0-85F778F32F89}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
