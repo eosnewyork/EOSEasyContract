@@ -1,5 +1,7 @@
-﻿using NLog;
+﻿using Microsoft.Extensions.Configuration;
+using NLog;
 using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace EOSCPPManagerLib
@@ -7,6 +9,11 @@ namespace EOSCPPManagerLib
     public class EOSCPPManagerCore
     {
         static Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
+        static IConfiguration config = new ConfigurationBuilder()
+            .AddJsonFile("appsettings.json", true, true)
+            .Build();
+
         public void createNewSmartContract(string folder, string contractName, bool overwriteExisting)
         {
 
@@ -95,6 +102,52 @@ namespace EOSCPPManagerLib
 
                 logger.Info("Please close and re-open any application (e.g. vscode) / console window that requires this new PATH");
             }
+
+        }
+
+        public void initializeInclude()
+        {
+            logger.Info("Begin include init");
+            var includeFolder = config["includeFolder"];
+            logger.Info("Include Folder = {0}. To change this edit appsettings.json", includeFolder);
+
+            if(!Directory.Exists(includeFolder))
+            {
+                logger.Info("Create folder {0}", includeFolder);
+                Directory.CreateDirectory(includeFolder);
+            }
+
+           
+            Dictionary<String, String> mounts = new Dictionary<string, string>();
+            mounts.Add(includeFolder, "/host_eosinclude");
+
+            logger.Info("Check if container {0} exists", Util.getContainerName(includeFolder));
+
+            var containerExists = DockerHelper.CheckContainerExistsAsync(Util.getContainerName(includeFolder), mounts).Result;
+            if (!containerExists)
+            {
+                logger.Info("No existing container found");
+                var eosiocppDockerImage = config["eosiocppDockerImage"];
+                var n = DockerHelper.StartDockerAsync(eosiocppDockerImage, Util.getContainerName(includeFolder), false, mounts).Result;
+            }
+            else
+            {
+                logger.Info("Existing container found");
+            }
+
+
+            //string cmd = "cp -R /usr/local/eosio/include /host_eosinclude";
+            string cmd = @"mkdir -p /host_eosinclude/usr/local/eosio; \
+cp -v -R /usr/local/eosio /host_eosinclude/usr/local; \
+mkdir -p /host_eosinclude/usr/local/eosio.cdt/include; \
+cp -v -R /usr/local/eosio.cdt/include /host_eosinclude/usr/local/eosio.cdt/; \
+mkdir -p /host_eosinclude/usr/local/include; \
+cp -v -R /usr/local/eosio/include /host_eosinclude/usr/local; \
+mkdir -p /host_eosinclude/usr/global/include; \
+cp -v -R /usr/include /host_eosinclude/usr/global; 
+
+".Replace("\r","");
+            var asyncResult = DockerHelper.RunCommandAsync(cmd, Util.getContainerName(includeFolder)).Result;
 
         }
 

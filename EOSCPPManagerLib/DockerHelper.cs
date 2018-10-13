@@ -111,7 +111,7 @@ namespace EOSCPPManagerLib
             return exists;
         }
 
-        public static async Task<bool> CheckContainerExistsAsync(string containerNameToCheck)
+        public static async Task<bool> CheckContainerExistsAsync(string containerNameToCheck, Dictionary<string, string> mounts)
         {
             containerNameToCheck = "/" + containerNameToCheck;  // Not sure why the container names are prefixed with /, but we'll add it so that we match. 
             bool exists = false;
@@ -136,7 +136,10 @@ namespace EOSCPPManagerLib
 
 
                             logger.Info("The container is NOT RUNNING, it's in a {0} state. Start it", container.State);
-                            var started = StartDockerAsync(eosiocppDockerImage, containerNameToCheck, true).Result;
+
+                            //Dictionary<String, String> mounts = new Dictionary<string, string>();
+                            //mounts.Add(sourceCodePath, "/data");
+                            var started = StartDockerAsync(eosiocppDockerImage, containerNameToCheck, true, mounts).Result;
                         }
                         if (exists)
                             break;
@@ -167,10 +170,11 @@ namespace EOSCPPManagerLib
             return containers;
         }
 
-        public static async Task<bool> StartDockerAsync(string dockerImageName, string containerName, bool exists)
+        public static async Task<bool> StartDockerAsync(string dockerImageName, string containerName, bool exists, Dictionary<string, string> mounts)
         {
             try
             {
+                /*
                 var m = new List<Mount>
                             {
                                 new Mount
@@ -178,17 +182,21 @@ namespace EOSCPPManagerLib
                                     Source = sourceCodePath,
                                     Target = "/data",
                                     Type = "bind"
-                                }
-                                /*
-                                ,
+                                },
                                 new Mount
                                 {
                                     Source = "C:/eosincludes",
                                     Target = "/host_eosinclude",
                                     Type = "bind"
                                 }
-                                */
+                                
                             };
+                */
+                var m = new List<Mount>();
+                foreach (var mount in mounts)
+                {
+                    m.Add(new Mount() { Source = mount.Key, Target = mount.Value, Type = "bind"});
+                }
 
                 HostConfig h = new HostConfig();
                 h.Mounts = m;
@@ -225,7 +233,7 @@ namespace EOSCPPManagerLib
             return true;
         }
 
-        public static async Task<bool> RunCommandAsync(string command)
+        public static async Task<bool> RunCommandAsync(string command, string containerId)
         {
             //const string id = "EOSCDT";
 
@@ -248,7 +256,7 @@ namespace EOSCPPManagerLib
                     Privileged = true
                 };
 
-                var execId = await client.Containers.ExecCreateContainerAsync(Util.getContainerName(sourceCodePath), config);
+                var execId = await client.Containers.ExecCreateContainerAsync(containerId, config);
 
                 logger.Info("ExecCreateContainerAsync {0}", execId.ID);
 

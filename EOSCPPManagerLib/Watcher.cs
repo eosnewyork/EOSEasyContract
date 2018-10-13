@@ -93,19 +93,15 @@ namespace EOSCPPManagerLib
                 logger.Info("Building ... ");
                 Stopwatch sw = new Stopwatch();
                 sw.Start();
-                /*
-                                IConfiguration config = new ConfigurationBuilder()
-                                    .AddJsonFile("appsettings.json", true, true)
-                                    .Build();
-
-                                var eosiocppDockerImage = config["eosiocppDockerImage"];
-                */
                 logger.Info("Check if container {0} exists", Util.getContainerName(sourceCodePath));
-                var containerExists = DockerHelper.CheckContainerExistsAsync(Util.getContainerName(sourceCodePath)).Result;
+
+                Dictionary<String, String> mounts = new Dictionary<string, string>();
+                mounts.Add(sourceCodePath, "/data");
+                var containerExists = DockerHelper.CheckContainerExistsAsync(Util.getContainerName(sourceCodePath), mounts).Result;
                 if (!containerExists)
                 {
                     logger.Info("No existing container found");
-                    var n = DockerHelper.StartDockerAsync(dockerImage, Util.getContainerName(sourceCodePath), false).Result;
+                    var n = DockerHelper.StartDockerAsync(dockerImage, Util.getContainerName(sourceCodePath), false, mounts).Result;
                 } else
                 {
                     logger.Info("Existing container found");
@@ -113,7 +109,7 @@ namespace EOSCPPManagerLib
 
                 //string cmd = "ls /";
                 string cmd = "./build.sh";
-                var asyncResult = DockerHelper.RunCommandAsync(cmd).Result;
+                var asyncResult = DockerHelper.RunCommandAsync(cmd, Util.getContainerName(sourceCodePath)).Result;
 
                 sw.Stop();
                 logger.Info("Done Building. Build Duration = " + sw.Elapsed);

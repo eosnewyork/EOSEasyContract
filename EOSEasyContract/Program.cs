@@ -11,6 +11,10 @@ namespace EOSEasyContract
     {
         static Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
+        static IConfiguration config = new ConfigurationBuilder()
+            .AddJsonFile("appsettings.json", true, true)
+            .Build();
+
         public static int Main(string[] args)
         {
 
@@ -113,6 +117,27 @@ namespace EOSEasyContract
                     });
                 });
 
+                configCmd.Command("include", setCmd =>
+                {
+                    setCmd.Description = "Copy header files and other include files.";
+
+                    setCmd.OnExecute(() =>
+                    {
+                        logger.Info($"Start Initialize include");
+                        //if(DirectoryExistsAttribute.e)
+                        var lib = new EOSCPPManagerCore();
+                        try
+                        {
+                            lib.initializeInclude();
+                        }
+                        catch (Exception ex)
+                        {
+                            logger.Error(ex.Message);
+                        }
+
+                    });
+                });
+
             });
 
             app.Command("template", configCmd =>
@@ -160,9 +185,7 @@ namespace EOSEasyContract
             app.Command("build", configCmd =>
             {
 
-                IConfiguration config = new ConfigurationBuilder()
-                    .AddJsonFile("appsettings.json", true, true)
-                    .Build();
+
                 var eosiocppDockerImage = config["eosiocppDockerImage"];
 
                 var pathOption = configCmd.Option("-p|--path <PATH>", "The path to the parent folder, which will contain the new template (*Required)", CommandOptionType.SingleValue).IsRequired();
