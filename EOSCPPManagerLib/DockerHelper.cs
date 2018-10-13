@@ -1,5 +1,6 @@
 ﻿using Docker.DotNet;
 using Docker.DotNet.Models;
+using Microsoft.Extensions.Configuration;
 using NLog;
 using System;
 using System.Collections.Generic;
@@ -124,16 +125,25 @@ namespace EOSCPPManagerLib
                     {
                         //logger.Info("container MATCH: {0} == {1}", containerName.ToUpper(), containerNameToCheck);
                         exists = true;
+
+                        if (container.State != "running")
+                        {
+
+                            IConfiguration config = new ConfigurationBuilder()
+                            .AddJsonFile("appsettings.json", true, true)
+                            .Build();
+                            var eosiocppDockerImage = config["eosiocppDockerImage"];
+
+
+                            logger.Info("The container is NOT RUNNING, it's in a {0} state. Start it", container.State);
+                            var started = StartDockerAsync(eosiocppDockerImage, containerNameToCheck, true).Result;
+                        }
+                        if (exists)
+                            break;
                     }
 
                 }
-                if (container.State != "running")
-                {
-                    logger.Info("The container is NOT RUNNING, it's in a {0} state. Start it", container.State);
-                    var started = StartDockerAsync("", containerNameToCheck, true).Result;
-                }
-                if (exists)
-                    break;
+
             }
             return exists;
         }
@@ -168,13 +178,16 @@ namespace EOSCPPManagerLib
                                     Source = sourceCodePath,
                                     Target = "/data",
                                     Type = "bind"
-                                },
+                                }
+                                /*
+                                ,
                                 new Mount
                                 {
                                     Source = "C:/eosincludes",
                                     Target = "/host_eosinclude",
                                     Type = "bind"
                                 }
+                                */
                             };
 
                 HostConfig h = new HostConfig();

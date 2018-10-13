@@ -34,30 +34,33 @@ namespace EOSCPPManagerLib
                     }
                     
                 }
+
+                string baseDir = AppDomain.CurrentDomain.BaseDirectory;
+
                 logger.Info("Creatind directory \"{0}\"", fullPath);
                 Directory.CreateDirectory(fullPath);
                 // Copy the build and cmakelist
                 var buildFile = Path.Combine(fullPath, "build.sh");
-                File.Copy("templateFiles\\build.sh", buildFile);
+                File.Copy(Path.Combine(baseDir,"templateFiles\\build.sh"), buildFile);
                 var cmakelistFile = Path.Combine(fullPath, "CMakeLists.txt");
-                File.Copy("templateFiles\\CMakeLists.txt", cmakelistFile);
+                File.Copy(Path.Combine(baseDir, "templateFiles\\CMakeLists.txt"), cmakelistFile);
 
                 // Replace the test references with the name of the template. 
                 string cmakeText = File.ReadAllText(cmakelistFile);
-                cmakeText = cmakeText.Replace("test.cpp", contractName+".cpp");
-                cmakeText = cmakeText.Replace("test.wasm", contractName + ".wasm");
+                cmakeText = cmakeText.Replace(Path.Combine(baseDir, "test.cpp"), contractName+".cpp");
+                cmakeText = cmakeText.Replace(Path.Combine(baseDir, "test.wasm"), contractName + ".wasm");
                 File.WriteAllText(cmakelistFile, cmakeText);
 
                 // Copy the cpp and hpp file - the template itself. 
                 var cppFile = Path.Combine(fullPath, contractName+".cpp");
-                File.Copy("templateFiles\\test.cpp", cppFile);
+                File.Copy(Path.Combine(baseDir, "templateFiles\\test.cpp"), cppFile);
                 var hppFile = Path.Combine(fullPath, contractName+".hpp");
-                File.Copy("templateFiles\\test.hpp", hppFile);
+                File.Copy(Path.Combine(baseDir, "templateFiles\\test.hpp"), hppFile);
 
                 // Create the .vscode folder and content so that vscode knows how to handle the contents
                 String vscodeFolder = Path.Combine(fullPath, ".vscode");
                 Directory.CreateDirectory(vscodeFolder);
-                foreach (var srcPath in Directory.GetFiles("templateFiles\\.vscode"))
+                foreach (var srcPath in Directory.GetFiles(Path.Combine(baseDir, "templateFiles\\.vscode")))
                 {
                     FileInfo fileInfo = new FileInfo(srcPath);
                     File.Copy(srcPath, Path.Combine(vscodeFolder,fileInfo.Name), true);

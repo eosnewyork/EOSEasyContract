@@ -41,7 +41,11 @@ Getting Started
 Before executing the following commands, ensure that you this following setting is set correctly in your docker settings. 
 
 
-![Docker Settings](DockerSettings.png)
+![Docker Settings - Enable daemon ](DockerSettings.png)
+
+![Docker Settings - Share drive](ShareDrive.png)
+
+
 ```
 > cd c:\tools\EOSEasyContract
 > EOSEasyContract.exe init docker
