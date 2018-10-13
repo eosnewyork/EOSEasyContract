@@ -47,8 +47,8 @@ namespace EOSCPPManagerLib
 
                 // Replace the test references with the name of the template. 
                 string cmakeText = File.ReadAllText(cmakelistFile);
-                cmakeText = cmakeText.Replace(Path.Combine(baseDir, "test.cpp"), contractName+".cpp");
-                cmakeText = cmakeText.Replace(Path.Combine(baseDir, "test.wasm"), contractName + ".wasm");
+                cmakeText = cmakeText.Replace("test.cpp", contractName+".cpp");
+                cmakeText = cmakeText.Replace("test.wasm", contractName + ".wasm");
                 File.WriteAllText(cmakelistFile, cmakeText);
 
                 // Copy the cpp and hpp file - the template itself. 
