@@ -26,17 +26,20 @@ Requirements
 Getting Started
 ------------
 
-1. Download ( https://github.com/eosnewyork/EOSEasyContract/releases ) and decompress the software (in this example we'll decompress the .zip file to a folder c:\tools\EOSEasyContract)
+#### 1. Get the software
+Download ( https://github.com/eosnewyork/EOSEasyContract/releases ) and decompress the software (in this example we'll decompress the .zip file to a folder c:\tools\EOSEasyContract)
 
-2. Initialize you environment
 
+#### 2. Initialize you environment
+
+This step added the exe folder to your PATH variable. 
 ```
 # Your command prompt must have Admin rights as this will try to add a variable to your PATH
 > cd c:\tools\EOSEasyContract
 > EOSEasyContract.exe init windows
 ````
 
-2. Test docker and download missing images
+#### 3. Test docker and download missing images
 
 Before executing the following commands, ensure that you this following setting is set correctly in your docker settings. 
 
@@ -45,26 +48,37 @@ Before executing the following commands, ensure that you this following setting 
 
 ![Docker Settings - Share drive](ShareDrive.png)
 
+The following command will check that you have the required Docker image. If not, it'll be downloaded .. it is a large image (~3GB) and takes some time to download. 
 
 ```
 > cd c:\tools\EOSEasyContract
 > EOSEasyContract.exe init docker
 ````
 
-4. Generate a project from template
+#### 4. Test docker and download missing images
+
+By executing the following, the header files in the docker container are copied to the local machine (C:\eosincludes folder) and will be referenced in the generated templates. This allows Visual studio code completion and other functions to act correctly in context.
+
+```
+> EOSEasyContract.exe init include
+```
+
+
+#### 5. Generate a project from template
 
 ```
 > EOSEasyContract.exe template new --path c:\temp --name EOSTemplate1
 ````
 
-5. Open the project in Visual Studio Code, using the below instruction or simply launch the GUI and open the folder
+
+#### 6. Open the project in Visual Studio Code, using the below instruction or simply launch the GUI and open the folder
 
 ```
 > cd c:\temp\EOSTemplate1
 > code .
 ````
 
-6. Once in Visual Studio code, run the Build task by pressing CTL+SHIFT+B
+#### 7. Once in Visual Studio code, run the Build task by pressing CTL+SHIFT+B
 
 You should see output that looks as follows in your Visual Studio termnal window. 
 
@@ -74,7 +88,7 @@ You should see output that looks as follows in your Visual Studio termnal window
 Begin watching C:\temp\EOSTemplate1. Build using docker image XXXXXXXXXXXXXXXXX.
 ```
 
-7. Save the .cpp or .hpp file in the project, and watch the magic happen. 
+#### 8. Save the .cpp or .hpp file in the project, and watch the magic happen. 
 
 You should see somethin like this in the terminal window:
 
@@ -102,7 +116,7 @@ End EOSIO contract build
 Done Building. Build Duration = 00:00:08.0230652
 ```
 
-8. The result of the build will be placed into a sub folder called "build" 
+#### 9. The result of the build will be placed into a sub folder called "build" 
 
 ```
 C:\temp\EOSTemplate1\EOSTemplate1.wasm
