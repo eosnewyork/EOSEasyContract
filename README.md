@@ -66,6 +66,10 @@ By executing the following, the header files in the docker container are copied 
 
 #### 5. Generate a project from template
 
+To generate a new project use the the following command.
+
+In the below example we will create a project called "EOSTemplate1" in the C:\temp folder. Note that c:\temp must exist and the project folder (EOSTemplte1 in this case) will be created. 
+
 ```
 > EOSEasyContract.exe template new --path c:\temp --name EOSTemplate1
 ````
