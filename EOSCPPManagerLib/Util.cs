@@ -29,5 +29,10 @@ namespace EOSCPPManagerLib
             string pathMD5 = Util.CreateMD5(sourceCodePath);
             return "EOSCDT" + "-" + pathMD5;
         }
+
+        public static void copyLibs(string destinationPath)
+        {
+
+        }
     }
 }
