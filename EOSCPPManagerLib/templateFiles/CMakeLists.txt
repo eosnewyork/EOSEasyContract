@@ -1,10 +1,10 @@
 cmake_minimum_required(VERSION 3.5)
-project(test_example VERSION 1.0.0)
+project(hello_example VERSION 1.0.0)
 
-if(EOSIO_CDT_ROOT STREQUAL "" OR NOT EOSIO_CDT_ROOT)
-	    set(EOSIO_CDT_ROOT "/usr/local/eosio.cdt")
-endif()
-list(APPEND CMAKE_MODULE_PATH ${EOSIO_CDT_ROOT}/lib/cmake)
-include(EosioWasmToolchain)
+find_package(eosio.cdt)
 
-add_executable( test.wasm test.cpp )
+### Only generate the wasm
+#add_executable( hello.wasm hello.cpp )
+
+### Generate the wasm and abi
+add_contract( hello hello hello.cpp )

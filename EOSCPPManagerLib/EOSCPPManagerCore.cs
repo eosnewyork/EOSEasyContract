@@ -46,21 +46,27 @@ namespace EOSCPPManagerLib
 
                 logger.Info("Creatind directory \"{0}\"", fullPath);
                 Directory.CreateDirectory(fullPath);
+
                 // Copy the build and cmakelist
-                var buildFile = Path.Combine(fullPath, "build.sh");
-                File.Copy(Path.Combine(baseDir,"templateFiles\\build.sh"), buildFile);
-                var cmakelistFile = Path.Combine(fullPath, "CMakeLists.txt");
-                File.Copy(Path.Combine(baseDir, "templateFiles\\CMakeLists.txt"), cmakelistFile);
+                var buildFileDestinationPath = Path.Combine(fullPath, "build.sh");
+                File.Copy(Path.Combine(baseDir,"templateFiles\\build.sh"), buildFileDestinationPath);
+                var cmakelistFileDestinationPath = Path.Combine(fullPath, "CMakeLists.txt");
+                File.Copy(Path.Combine(baseDir, "templateFiles\\CMakeLists.txt"), cmakelistFileDestinationPath);
 
                 // Replace the test references with the name of the template. 
-                string cmakeText = File.ReadAllText(cmakelistFile);
-                cmakeText = cmakeText.Replace("test.cpp", contractName+".cpp");
-                cmakeText = cmakeText.Replace("test.wasm", contractName + ".wasm");
-                File.WriteAllText(cmakelistFile, cmakeText);
+                string updatedCmakeText = File.ReadAllText(cmakelistFileDestinationPath);
+                updatedCmakeText = updatedCmakeText.Replace("hello", contractName);
+                File.WriteAllText(cmakelistFileDestinationPath, updatedCmakeText);
 
                 // Copy the cpp and hpp file - the template itself. 
-                var cppFile = Path.Combine(fullPath, contractName+".cpp");
-                File.Copy(Path.Combine(baseDir, "templateFiles\\test.cpp"), cppFile);
+                var cppFileDestinationPath = Path.Combine(fullPath, contractName+".cpp");
+                File.Copy(Path.Combine(baseDir, "templateFiles\\test.cpp"), cppFileDestinationPath);
+                string updatedCPPText = File.ReadAllText(cppFileDestinationPath);
+                updatedCPPText = updatedCPPText.Replace("hello", contractName);
+                File.WriteAllText(cppFileDestinationPath, updatedCPPText);
+
+
+
                 var hppFile = Path.Combine(fullPath, contractName+".hpp");
                 File.Copy(Path.Combine(baseDir, "templateFiles\\test.hpp"), hppFile);
 
