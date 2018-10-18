@@ -125,3 +125,33 @@ Done Building. Build Duration = 00:00:08.0230652
 ```
 C:\temp\EOSTemplate1\EOSTemplate1.wasm
 ```
+
+
+Uploading your contract to the blockchain
+------------
+
+Getting a test EOS Network up and running is currently outside the scope of this readme. 
+
+The following steps can however be used to push your newly compiled contract to a testnet or mainnet of your choice. 
+
+Check the Terminal output which compiled your contact and you'll find a container name that looks as follows: __EOSCDT-XXXXX__ (Example: EOSCDT-7BB4BB304C3DE98597913F1FDD1386EC) - This is the name of the docker container that was created to compile your contract. 
+
+Run the following command to gain shell access to the running container. 
+```
+docker exec -it {Container Name} /bin/bash
+```
+
+Next create a wallet and import the private key for the account you'd like to publish the contract to. 
+```
+cleos wallet create --to-console
+
+cleos wallet import --private-key {Account Private Key}
+```
+Upload the contract to your EOS account 
+```
+cleos -u {API URL}:{API Port} set contract {EOS Account Name} /data/build {Contract Name}.wasm {Contract Name}.abi -p {EOS Account Name}
+```
+Call an action on your contract. This example assumes you've uploaded the default template and that a method name 'Hi' exists. 
+```
+cleos -u {API URL}:{API Port} push action {EOS Account Name} hi '["username1"]' --permission {EOS Account Name}@active
+```
