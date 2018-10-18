@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Text;
 
 namespace EOSCPPManagerLib
@@ -33,6 +36,20 @@ namespace EOSCPPManagerLib
         public static void copyLibs(string destinationPath)
         {
 
+        }
+
+        public static string AppDataFolder()
+        {
+            var userPath = Environment.GetEnvironmentVariable(
+              RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ?
+              "LOCALAPPDATA" : "Home");
+
+            var assy = System.Reflection.Assembly.GetEntryAssembly();
+            var productName = assy.GetCustomAttributes<AssemblyProductAttribute>()
+              .FirstOrDefault();
+            var path = System.IO.Path.Combine(userPath, productName.Product);
+
+            return path;
         }
     }
 }

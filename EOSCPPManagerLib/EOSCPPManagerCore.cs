@@ -3,6 +3,7 @@ using NLog;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading;
 
 namespace EOSCPPManagerLib
 {
@@ -76,7 +77,16 @@ namespace EOSCPPManagerLib
                 foreach (var srcPath in Directory.GetFiles(Path.Combine(baseDir, "templateFiles\\.vscode")))
                 {
                     FileInfo fileInfo = new FileInfo(srcPath);
-                    File.Copy(srcPath, Path.Combine(vscodeFolder,fileInfo.Name), true);
+                    String destFilePath = Path.Combine(vscodeFolder, fileInfo.Name);
+                    File.Copy(srcPath, destFilePath, true);
+
+                    if(destFilePath.Contains("c_cpp_properties.json"))
+                    {
+                        string updatedPropertiesText = File.ReadAllText(destFilePath);
+                        updatedPropertiesText = updatedPropertiesText.Replace("C:/eosincludes", Util.AppDataFolder().Replace(@"\","/"));
+                        File.WriteAllText(destFilePath, updatedPropertiesText);
+
+                    }
                 }
 
                 logger.Info("Template creation completed");
@@ -114,13 +124,22 @@ namespace EOSCPPManagerLib
         public void initializeInclude()
         {
             logger.Info("Begin include init");
-            var includeFolder = config["includeFolder"];
-            logger.Info("Include Folder = {0}. To change this edit appsettings.json", includeFolder);
+            //var includeFolder = config["includeFolder"];
+            var includeFolder = Util.AppDataFolder();
+            logger.Info("Include Folder = {0}.", includeFolder);
+
+            if(Directory.Exists(includeFolder))
+            {
+                logger.Info("Deleting existsing folder");
+                Directory.Delete(includeFolder, true);
+            }
 
             if(!Directory.Exists(includeFolder))
             {
                 logger.Info("Create folder {0}", includeFolder);
                 Directory.CreateDirectory(includeFolder);
+                logger.Info("Pause for 2 seconds before starting the copy.");
+                Thread.Sleep(2000);
             }
 
            
@@ -154,6 +173,8 @@ cp -v -R /usr/include /host_eosinclude/usr/global;
 
 ".Replace("\r","");
             var asyncResult = DockerHelper.RunCommandAsync(cmd, Util.getContainerName(includeFolder)).Result;
+
+            logger.Info("Include File written to {0}. This include path will be referened in any new projects created.", includeFolder);
 
         }
 

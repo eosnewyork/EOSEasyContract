@@ -82,6 +82,9 @@ namespace EOSEasyContract
                         var eosiocppDockerImage = config["eosiocppDockerImage"];
 
                         logger.Info("Check connection to local docker instance and confirm that image \"{0}\" exists", eosiocppDockerImage);
+                        logger.Info("If this step hange/freezes for an extended period of time please confirm the following:");
+                        logger.Info("\t 1. That your docker settings have \"expose daemon\" enabled. On windows this is tcp://localhost:2375 by default.");
+                        logger.Info("\t 2. That your Antivirus is not blocking access to tcp://localhost:2375");
 
                         var exists = DockerHelper.CheckImageExistsAsync(eosiocppDockerImage).Result;
                         if (!exists)
