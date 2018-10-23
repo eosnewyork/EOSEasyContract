@@ -53,6 +53,10 @@ namespace EOSCPPManagerLib
                 File.Copy(Path.Combine(baseDir,"templateFiles\\build.sh"), buildFileDestinationPath);
                 var cmakelistFileDestinationPath = Path.Combine(fullPath, "CMakeLists.txt");
                 File.Copy(Path.Combine(baseDir, "templateFiles\\CMakeLists.txt"), cmakelistFileDestinationPath);
+                var gitIgnoreDestinationPath = Path.Combine(fullPath, ".gitignore");
+                File.Copy(Path.Combine(baseDir, "templateFiles\\_gitignore"), gitIgnoreDestinationPath);
+
+                
 
                 // Replace the test references with the name of the template. 
                 string updatedCmakeText = File.ReadAllText(cmakelistFileDestinationPath);
@@ -151,9 +155,12 @@ namespace EOSCPPManagerLib
             var containerExists = DockerHelper.CheckContainerExistsAsync(Util.getContainerName(includeFolder), mounts).Result;
             if (!containerExists)
             {
-                logger.Info("No existing container found");
                 var eosiocppDockerImage = config["eosiocppDockerImage"];
-                var n = DockerHelper.StartDockerAsync(eosiocppDockerImage, Util.getContainerName(includeFolder), false, mounts).Result;
+                logger.Info("Container {0} not found. Please run \"EOSEasyContract init docker\"", eosiocppDockerImage);
+                return;
+                //var eosiocppDockerImage = config["eosiocppDockerImage"];
+                //var n = DockerHelper.StartDockerAsync(eosiocppDockerImage, Util.getContainerName(includeFolder), false, mounts).Result;
+                //var y = DockerHelper.getImageAsync(eosiocppDockerImage).Result;
             }
             else
             {
