@@ -156,11 +156,19 @@ namespace EOSCPPManagerLib
             if (!containerExists)
             {
                 var eosiocppDockerImage = config["eosiocppDockerImage"];
-                logger.Info("Container {0} not found. Please run \"EOSEasyContract init docker\"", eosiocppDockerImage);
-                return;
+                //logger.Info("Container {0} not found. Please run \"EOSEasyContract init docker\"", eosiocppDockerImage);
+                //return;
                 //var eosiocppDockerImage = config["eosiocppDockerImage"];
-                //var n = DockerHelper.StartDockerAsync(eosiocppDockerImage, Util.getContainerName(includeFolder), false, mounts).Result;
-                //var y = DockerHelper.getImageAsync(eosiocppDockerImage).Result;
+                logger.Info("Container did not exist. Creating new Container to copy include files from: {0}", Util.getContainerName(includeFolder));
+                var n = DockerHelper.StartDockerAsync(eosiocppDockerImage, Util.getContainerName(includeFolder), false, mounts).Result;
+                var containerExistsTake2 = DockerHelper.CheckContainerExistsAsync(Util.getContainerName(includeFolder), mounts).Result;
+                logger.Info("Check if container {0} exists", Util.getContainerName(includeFolder));
+                if (!containerExistsTake2)
+                {
+                    logger.Error("Container not found. We tried creating the container but something went wrong and we still can't access the container.");
+                    logger.Error("Container {0} not found. Please run \"EOSEasyContract init docker\" and then try again.", eosiocppDockerImage);
+                    return;
+                }
             }
             else
             {
