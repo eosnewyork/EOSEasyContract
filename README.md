@@ -26,7 +26,7 @@ Requirements
 Getting Started
 ------------
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/h-9qDKCSN1g" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+[![How to install video](https://img.youtube.com/vi/h-9qDKCSN1g/0.jpg)](https://www.youtube.com/embed/h-9qDKCSN1g)
 
 #### 1. Get the software
 Download ( https://github.com/eosnewyork/EOSEasyContract/releases ) and decompress the software (in this example we'll decompress the .zip file to a folder c:\tools\EOSEasyContract)
