@@ -26,6 +26,8 @@ Requirements
 Getting Started
 ------------
 
+<iframe width="560" height="315" src="https://www.youtube.com/embed/h-9qDKCSN1g" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
 #### 1. Get the software
 Download ( https://github.com/eosnewyork/EOSEasyContract/releases ) and decompress the software (in this example we'll decompress the .zip file to a folder c:\tools\EOSEasyContract)
 
@@ -154,4 +156,25 @@ cleos -u {API URL}:{API Port} set contract {EOS Account Name} /data/build {Contr
 Call an action on your contract. This example assumes you've uploaded the default template and that a method name 'Hi' exists. 
 ```
 cleos -u {API URL}:{API Port} push action {EOS Account Name} hi '["username1"]' --permission {EOS Account Name}@active
+```
+
+Upgrading
+------------
+
+In order to upgrade: 
+
+1. Delete the current binaries from your inital install locations. 
+2. The following command will stop any running containers. 
+```
+> EOSEasyContract.exe util cleanDocker
+```
+
+3. The docker image may have been upgraded, so run the following commadn to download any new image. 
+```
+> EOSEasyContract.exe init docker
+```
+
+4. The include files may have changed, so run the following to download the latest include files. 
+```
+> EOSEasyContract.exe init include
 ```
