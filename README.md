@@ -26,7 +26,8 @@ Requirements
 Getting Started
 ------------
 
-Explainer Video (Click Below)
+Explainer Video (Click Below)  
+
 [![How to install video](https://img.youtube.com/vi/h-9qDKCSN1g/0.jpg)](https://www.youtube.com/embed/h-9qDKCSN1g)
 
 #### 1. Get the software
