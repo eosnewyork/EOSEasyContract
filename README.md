@@ -20,6 +20,32 @@ Currently Supported on: __Windows__, ~~OSX~~ (coming soon), ~~Linux~~ (coming so
 
 Requirements
 ------------
+
+IMPORTANT! Docker is a requirement, as per the Docker install requirements (https://docs.docker.com/docker-for-windows/install/), you need at minimum Windows 10 Pro. 
+```
+- Windows 10 64bit: Pro, Enterprise or Education (1607 Anniversary Update, Build 14393 or later).
+- Virtualization is enabled in BIOS. Typically, virtualization is enabled by default. 
+```
+Here's how to check your windows version:  
+1. Hit the "Windows Key" and Type "This PC" 
+2. Right click on "This PC" in the menu
+3. Select Properties
+4. Look at what's displayed under the Window Edition heading
+
+![Check the windows version](CheckWindowsVersion.png)
+
+While there are ways to work around this (eg. if you have Windows 10 Home you can use https://docs.docker.com/toolbox/toolbox_install_windows/), we do not support / test this method. 
+
+Docker is becoming such an essential tool for developers that we really feel that you'd be doing yourself a favor by upgrading to Windows 10 Pro. The upgrade should cost about $50 and will save you many many hours of frustration ... it's money well spent and is a simple upgrade process:
+
+1. Purchased upgrade license key from your vendor of choice
+2. https://support.microsoft.com/en-us/help/12384/windows-10-upgrading-home-to-pro
+
+*** Check that your CPU supports Virtualization before upgrading. Most new CPUs do.
+
+![Check virtualization](virtualization-enabled.png)
+
+
 - Docker (free) - https://www.docker.com/get-started
 - Visual Studio Code (free) - https://code.visualstudio.com/download
 
