@@ -34,7 +34,7 @@ Here's how to check your windows version:
 
 ![Check the windows version](CheckWindowsVersion.png)
 
-While there are ways to work around this (eg. if you have Windows 10 Home you can use https://docs.docker.com/toolbox/toolbox_install_windows/), we do not support / test this method. 
+While there are ways to work around this (eg. if you have Windows 10 Home you can use https://docs.docker.com/toolbox/toolbox_install_windows/), we do not support / test this method.)
 
 Docker is becoming such an essential tool for developers that we really feel that you'd be doing yourself a favor by upgrading to Windows 10 Pro. The upgrade should cost about $50 and will save you many many hours of frustration ... it's money well spent and is a simple upgrade process:
 
