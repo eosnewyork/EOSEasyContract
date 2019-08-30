@@ -1,14 +1,8 @@
-#include <eosiolib/eosio.hpp>
+#include "hello.hpp"
 
-using namespace eosio;
+ACTION hello::hi(name user)
+{
+	print("Hello, ", name{user});
+}
 
-CONTRACT hello : public eosio::contract{
-public:
-	using contract::contract;
-
-	ACTION hi(name user) {
-		print("Hello, ", name{ user });
-	}
-};
-
-EOSIO_DISPATCH(hello, (hi))
+// EOSIO_DISPATCH(hello, (hi))
