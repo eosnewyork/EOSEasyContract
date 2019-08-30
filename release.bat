@@ -7,7 +7,7 @@ md releases
 rmdir /s /q .\EOSEasyContract\bin\release 
 
 set winOS=win-x64
-# set unixOS=osx-x64 linux-x64
+; set unixOS=osx-x64 linux-x64
 
 for %%N in (%winOS%) do (
 	set rid=%%N
